@@ -5,6 +5,7 @@ from airflow.operators.python import PythonOperator
 from scripts.text_processing.basic_processing import (
     copy_files,
     force_unix_newlines,
+    remove_html_errors,
     process_file,
 )
 
@@ -35,4 +36,16 @@ force_unix_newlines_step = PythonOperator(
     dag=dag
 )
 
-copy_files_step >> force_unix_newlines_step
+# Step 3: 
+
+# Step 4: Remove common HTML errors
+remove_html_errors_step = PythonOperator(
+    task_id='remove_html_errors_step',
+    python_callable=remove_html_errors,
+    op_kwargs={
+        "output_dir": "/opt/airflow/storage/dest"
+    },
+    dag=dag
+)
+
+copy_files_step >> force_unix_newlines_step >> remove_html_errors_step

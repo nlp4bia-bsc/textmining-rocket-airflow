@@ -1,5 +1,4 @@
 import os
-import subprocess
 import shutil
 
 def copy_files(source_dir, dest_dir):
@@ -28,10 +27,37 @@ def force_unix_newlines(output_dir):
         output_dir (str): Path to the directory containing the files
     """
 
-    # Build a string containing all files in the output directory
-    all_files = f"{output_dir}/*"
-
-    # Use subprocess to call the dos2unix command
     print("Force unix newline characters")
-    print(f"dos2unix {all_files}")
-    subprocess.run(["dos2unix", all_files])
+    for filename in os.listdir(output_dir):
+        file_path = os.path.join(output_dir, filename)
+
+        with open(file_path, "rb+") as f:
+            print(f"Processing file: {filename}")
+            content = f.read()
+            content = content.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+
+def remove_html_errors(output_dir):
+    replacements = {
+        "&mu;": "µ",
+        "&rsquo;": "'",
+        "&ge;": "≥",
+        "&le;": "≤",
+        "&beta;": "β",
+        "&alpha;": "α",
+        "&mdash;": "-",
+    }
+
+    for filename in os.listdir(output_dir):
+        if filename.endswith(".txt"):
+            file_path = os.path.join(output_dir, filename)
+            with open(file_path, "r+") as f:
+                content = f.read()
+                for entity, symbol in replacements.items():
+                    content = content.replace(entity, symbol)
+
+                f.seek(0)
+                f.write(content)
+                f.truncate()
