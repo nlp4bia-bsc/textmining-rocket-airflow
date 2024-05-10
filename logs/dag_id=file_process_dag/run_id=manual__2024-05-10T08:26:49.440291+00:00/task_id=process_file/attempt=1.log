@@ -1,0 +1,65 @@
+[2024-05-10T08:26:50.908+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-05-10T08:26:50.932+0000] {taskinstance.py:2073} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: file_process_dag.process_file manual__2024-05-10T08:26:49.440291+00:00 [queued]>
+[2024-05-10T08:26:50.938+0000] {taskinstance.py:2073} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: file_process_dag.process_file manual__2024-05-10T08:26:49.440291+00:00 [queued]>
+[2024-05-10T08:26:50.939+0000] {taskinstance.py:2303} INFO - Starting attempt 1 of 1
+[2024-05-10T08:26:50.963+0000] {taskinstance.py:2327} INFO - Executing <Task(PythonOperator): process_file> on 2024-05-10 08:26:49.440291+00:00
+[2024-05-10T08:26:50.967+0000] {warnings.py:110} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=195) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-05-10T08:26:50.968+0000] {standard_task_runner.py:63} INFO - Started process 196 to run task
+[2024-05-10T08:26:50.968+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'file_process_dag', 'process_file', 'manual__2024-05-10T08:26:49.440291+00:00', '--job-id', '34', '--raw', '--subdir', 'DAGS_FOLDER/from_folder_to_other.py', '--cfg-path', '/tmp/tmpgpan3phn']
+[2024-05-10T08:26:50.970+0000] {standard_task_runner.py:91} INFO - Job 34: Subtask process_file
+[2024-05-10T08:26:51.013+0000] {task_command.py:426} INFO - Running <TaskInstance: file_process_dag.process_file manual__2024-05-10T08:26:49.440291+00:00 [running]> on host 24b77fb676b2
+[2024-05-10T08:26:51.130+0000] {taskinstance.py:2644} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='file_process_dag' AIRFLOW_CTX_TASK_ID='process_file' AIRFLOW_CTX_EXECUTION_DATE='2024-05-10T08:26:49.440291+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-05-10T08:26:49.440291+00:00'
+[2024-05-10T08:26:51.131+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-05-10T08:26:51.146+0000] {logging_mixin.py:188} INFO - Processing file: 25531204.txt
+[2024-05-10T08:26:51.147+0000] {logging_mixin.py:188} INFO - A 28-year-old man presented to the Emergency Department of the Clinical Center of Serbia, Belgrade, with fever of 39.9°C, facial/neck edema, erythematous rash, cervical lymphadenopathy, malaise and shortness of breath that had commenced 24 h previously. He was tachycardic with a gallop rhythm, had dull heart sounds, and was tachypneic (20/min) and hypotensive (60/10 mm Hg). No murmurs or rubs were present. An electrocardiogram showed sinus tachycardia (150/min) with occasional premature ventricular extrasystoles. The patients' personal history revealed PFS present since childhood. He had had febrile attacks once a month, accompanied with cervical lymphadenopathy, abdominal cramps and arthritis. His febrile attacks had been treated with nonsteroid anti-inflammatory drugs and short prednisone courses. Previous attacks had been associated with high inflammatory markers, anemia and mild hepatosplenomegaly. His heart function had always been normal. He had been treated with sulfasalazine (500 mg t.i.d.) for ankle joint arthritis 2 weeks before this latest admission.
+
+On admission, blood tests revealed leukocytosis 18.4 × 109 (78s% neutrophils without eosinophilia and atypical lymphocytes) and the following elevated inflammatory markers: C-reactive protein (151 mg/l), ferritin (19,455 μg/l), creatine kinase (313 U/l), MB (muscle brain) creatine kinase isoenzyme (81 U/l), troponin T (1.6 μg/l), aspartate aminotransferase (287 U/l) and alanine aminotransferase (238 U/l). Metabolic acidosis (HCO3 4.6 mmol/l, pH 7.16, pCO2 1.7 kPa) was present. Chest X-rays showed cardiac enlargement. Plasma N-terminal pro-B-type natriuretic peptide was also elevated at 215 ng/l (normal is <100 ng/l).
+
+A diagnosis of cardiogenic shock was made and therapy with oxygen, fluids, inotropic agents, methylprednisolone (120 mg i.v.) and antibiotics was initiated. Despite this treatment, the patient died 8 h after admission.
+
+The autopsy revealed EM with prominent interstitial edema and inflammatory infiltrate composed of eosinophils and mononuclear cells. Vascular congestion of alveolar wall capillaries and alveolar damage were present. Eosinophilic infiltrates were found in the stomach and skeletal muscles, while massive hemophagocytosis was observed in bone marrow and lymph nodes. Acute heart failure caused by EM followed by pulmonary edema was established as the cause of death. The diagnosis of DIHS was confirmed by the first 5 of the following 6 diagnostic criteria: (i) a maculopapular rash developing 2–6 weeks after starting new therapy, (ii) lymphadenopathy, (iii) fever (>38°C), (iv) leukocytosis >10 × 109/l (without atypical lymphocytes and eosinophilia but with prominent tissue eosinophilia), (v) hepatitis (alanine aminotransferase, ALT >100 U/ml) and (vi) human herpes virus 6 reactivation (not tested) [1]. Genetic testing results, which were received postmortem, showed two heterozygous mutations in the gene for mevalonate kinase in exone 11 (C.1129G>A leading to P.V377I) and exone 6 (C.564.G>A leading to P.W188X) localized on 12q24.11, thus confirming hyper-IgD syndrome as one of the genetically defined hereditary periodic fever syndromes.
+
+MH  - Adult
+MH  - Anti-Inflammatory Agents, Non-Steroidal/*adverse effects/therapeutic use
+MH  - Arthritis/drug therapy
+MH  - Autopsy
+MH  - Eosinophilia/chemically induced
+MH  - Fatal Outcome
+MH  - Fever/complications
+MH  - Humans
+MH  - Male
+MH  - Myocarditis/*chemically induced/complications/pathology
+MH  - Shock, Cardiogenic/complications
+MH  - Sulfasalazine/*adverse effects/therapeutic use
+[2024-05-10T08:26:51.147+0000] {logging_mixin.py:188} INFO - Processing file: 25654384.txt
+[2024-05-10T08:26:51.147+0000] {logging_mixin.py:188} INFO - A 64-year-old female patient with a history of hyperthyroidism on treatment (thiamazole 5 mg once daily, and levothyroxine 62 μg once daily, currently euthyroid with normal thyroid-stimulating hormone, free thyroxine), was referred to our department from a regional hospital following a spider bite, which took place in western Greece (Aetolia-Acarnania region). The bite occurred in the pre-tibial area of the left lower extremity, while cleaning a building in a rural area, early November of 2013. The spider was described as black with red marks, about 2 cm in size and although it was not preserved for identification, the description as well as the clinical signs suggested European black widow spider envenomation.
+
+
+CLINICAL FINDINGS, DIAGNOSTIC ASSESMENT AND THERAPEUTIC INTERVENTIONS
+
+One and a half hours after the bite, the patient was nauseous, with generalized tremor, sweating, infra orbital edema, diffuse abdominal pain, and severe muscle cramping in the lower extremities. Examination revealed sinus tachycardia (104/min) and slightly increased blood pressure (150/80 mmHg). The abdomen was soft, nontender, without guarding signs. Her laboratory examinations (including abdominal ultrasound) were within normal range apart from a slight neutrophilic leucocytosis: Evolution of pathological laboratory values during hospitalization). She was put on opioid analgesia (pethidine), wide-spectrum antibiotics, and omeprazol intravenously. Tetanus prophylaxis, corticosteroids (methylprednisolone), and diazepam intravenously were also provided the first day.
+
+The second day she developed acute pulmonary edema with dyspnea, tachypnea, bilateral wheezing, hypertension, tachycardia (120/min). Cardiac enzymes (creatine phosphokinase, CK-MB, Troponin-I) were elevated, whereas the electrocardiogram (ECG) revealed T wave flattening in aVL lead. High-flow oxygen and furosemide intravenously were administered with immediate improvement. Subsequently, she was put on metoprolol 25 mg twice daily, fondaparinux, lisinopril 2.5 mg once daily, clopidogrel 75 mg, and acetylsalicylic acid 100 mg once daily. An echocardiogram performed on day 3 revealed increased left ventricular end-systolic diameter with end-diastolic diameter preserved within normal limits, moderately impaired left ventricular (LV) systolic function (LV ejection fraction was 36% calculated by Simpson's method), and increased filling pressures. Regional wall motion abnormalities were present, consisting of hypokinesis of the basal and middle segments of the left ventricular walls (more prominent in the anterior wall and interventricular septum), with complete sparing of the apical segments and moderate mitral regurgitation (see videos of transthoracic echocardiograms: Supplemental Digital Content 2, http://links.lww.com/MD/A193: Apical four chamber view hypokinetic basal and middle left ventricular segments, septal and lateral wall, with normal contractility of the apex: Apical three chamber view hypokinesis of the basal and middle septum and posterior wall with normal contractility of the apex).
+
+
+FOLLOW-UP AND OUTCOME
+
+By day 6, cardiac troponins and CK-MB were completely normal and the patient had clinically improved. During the course of the illness, low-grade fever, up to 37.6°C, was registered. LV ejection fraction was estimated at 48% on day 8 with persisting hypokinesis only in the basal and medial segments of the septum and anterior wall. She was discharged the next day in good clinical condition on lisinopril 2.5 mg once daily and metoprolol 25 mg twice daily. On follow-up, the abnormal contractility resolved completely, with no residual deficits found in an echocardiogram 46 days after the bite.
+
+MH  - Animals
+MH  - *Black Widow Spider
+MH  - Female
+MH  - Greece
+MH  - Heart Failure/etiology
+MH  - Humans
+MH  - Middle Aged
+MH  - Spider Bites/*complications
+MH  - Takotsubo Cardiomyopathy/complications/*etiology
+[2024-05-10T08:26:51.148+0000] {python.py:237} INFO - Done. Returned value was: None
+[2024-05-10T08:26:51.148+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-05-10T08:26:51.159+0000] {taskinstance.py:1205} INFO - Marking task as SUCCESS. dag_id=file_process_dag, task_id=process_file, execution_date=20240510T082649, start_date=20240510T082650, end_date=20240510T082651
+[2024-05-10T08:26:51.181+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2024-05-10T08:26:51.202+0000] {taskinstance.py:3482} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-05-10T08:26:51.206+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
