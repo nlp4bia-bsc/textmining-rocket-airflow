@@ -6,8 +6,11 @@ from scripts.text_processing.basic_processing import (
     copy_files,
     force_unix_newlines,
     remove_html_errors,
-    process_file,
+    fix_encoding_errors,
 )
+from scripts.text_processing.quick_prepro import quick_preprosessing
+from scripts.text_processing.check_newlines import check_newlines
+
 
 dag = DAG(
     dag_id="file_process_dag",
@@ -36,7 +39,15 @@ force_unix_newlines_step = PythonOperator(
     dag=dag
 )
 
-# Step 3: 
+# Step 3: Remove common artifacts
+fix_encoding_errors_step = PythonOperator(
+    task_id='fix_encoding_errors_step',
+    python_callable=fix_encoding_errors,
+    op_kwargs={
+        "output_dir": "/opt/airflow/storage/dest"
+    },
+    dag=dag
+)
 
 # Step 4: Remove common HTML errors
 remove_html_errors_step = PythonOperator(
@@ -48,4 +59,24 @@ remove_html_errors_step = PythonOperator(
     dag=dag
 )
 
-copy_files_step >> force_unix_newlines_step >> remove_html_errors_step
+# Step 5: Quick substitution of common errors and Unicode normalization
+quick_preprosessing_step = PythonOperator(
+    task_id='quick_preprosessing_step',
+    python_callable=quick_preprosessing,
+    op_kwargs={
+        "output_dir": "/opt/airflow/storage/dest"
+    },
+    dag=dag
+)
+
+# Step 6: Check if there are lines starting with lowercase. I need to manually go to those files and correct them if newlines are wrongly added
+check_newlines_step = PythonOperator(
+    task_id='check_newlines_step',
+    python_callable=check_newlines,
+    op_kwargs={
+        "output_dir": "/opt/airflow/storage/dest"
+    },
+    dag=dag
+)
+
+copy_files_step >> force_unix_newlines_step >> fix_encoding_errors_step >> remove_html_errors_step >> quick_preprosessing_step >> check_newlines_step

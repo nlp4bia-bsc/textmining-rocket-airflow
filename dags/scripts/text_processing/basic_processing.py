@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 
 def copy_files(source_dir, dest_dir):
@@ -61,3 +62,26 @@ def remove_html_errors(output_dir):
                 f.seek(0)
                 f.write(content)
                 f.truncate()
+
+
+def fix_encoding_errors(output_dir):
+    encoding_errors = {
+        "'\|\"\|\"\|\"": "'",
+        "•\|–\|—": "-",
+        " ": "",
+        "\f": " ",
+    }
+
+    for error, replacement in encoding_errors.items():
+        for root, _, files in os.walk(output_dir):
+            for filename in files:
+                filepath = os.path.join(root, filename)
+                print(filepath)
+
+                with open(filepath, "r", encoding="utf-8") as f_in:
+                    content = f_in.read()
+
+                content = re.sub(error, replacement, content)
+
+                with open(filepath, "w", encoding="utf-8") as f_out:
+                    f_out.write(content)
