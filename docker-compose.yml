@@ -286,3 +286,8 @@ services:
 
 volumes:
   postgres-db-volume:
+
+networks:
+  rocket:
+    external:
+      name: rocket

@@ -68,7 +68,7 @@ def fix_encoding_errors(output_dir):
     encoding_errors = {
         "'\|\"\|\"\|\"": "'",
         "•\|–\|—": "-",
-        " ": "",
+        #" ": "",
         "\f": " ",
     }
 

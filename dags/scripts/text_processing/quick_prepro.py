@@ -23,7 +23,7 @@ def argparser():
 
 pattern = re.compile("[^\S+\r\n]")
 
-def quick_prepro(file, old2new_simple, old2new_regex, pattern):
+def quick_prepro(file, old2new_simple, old2new_regex, pattern, r):
     '''
     Substitute/remove patterns in text file
     
@@ -87,4 +87,4 @@ def quick_preprosessing(output_dir):
         for file in f:
             if file.split('.')[-1] != 'txt':
                 continue
-            quick_prepro(file, old2new_simple, old2new_regex, pattern)
+            quick_prepro(file, old2new_simple, old2new_regex, pattern, r)
