@@ -13,7 +13,7 @@ from scripts.text_processing.check_newlines import check_newlines
 
 
 dag = DAG(
-    dag_id="file_process_dag",
+    dag_id="text_processing",
     start_date=datetime.datetime(2024, 5, 10),
     schedule_interval=None,
 )

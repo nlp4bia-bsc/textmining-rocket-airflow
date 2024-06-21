@@ -1,0 +1,112 @@
+from urllib.error import URLError
+import pandas as pd
+import os
+
+from scripts.snomed_automatic_translation.snomed_api import getConceptById
+
+BASE_PATH = '/opt/airflow/storage/translations'
+
+api_languages = [
+    {
+        "language": "en",
+        "edition": "MAIN",
+        "version": "2024-06-01",
+    },
+    {
+        "language": "es",
+        "edition": "MAIN/SNOMEDCT-ES",
+        "version": "2024-03-31",
+    },
+    {
+        "language": "nl",
+        "edition": "MAIN/SNOMEDCT-NL",
+        "version": "2024-03-31",
+    },
+    {
+        "language": "sv",
+        "edition": "MAIN/SNOMEDCT-SE",
+        "version": "2024-05-31",
+    },
+]
+
+default_args = {
+    "spreadsheet_id": "1GM17jnZop0eHSYaWKccVhp4pdbX58IEuSLXsiYg4GUQ",
+    "sheet_id": "0",
+    "column": "SNOMEDID NUMBER",
+    "api_languages": api_languages
+}
+
+def get_public_spreadsheet(spreadsheet_id, sheet_id=0):
+    spreadsheet_url = f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export?gid={sheet_id}&format=csv'
+    print(f'Spreadsheet URL: {spreadsheet_url}')
+    df = pd.read_csv(spreadsheet_url)
+    print(f'Spreadsheet columns: {list(df.columns)}')
+    return df
+
+def get_snomedid_list(df, column):
+    
+    snomed_list = list(df[column])
+
+    # Handler of typo in list
+    snomed_processed = []
+
+    for snomed_id in snomed_list:
+        lines = [line.strip() for line in snomed_id.splitlines() if line.strip()]
+        snomed_processed.extend(lines)
+
+    print(f'Spreadsheet SNOMED IDs: {snomed_processed}')
+    return snomed_processed
+
+def bulk_translate(snomed_list, api_languages):
+    total_concepts = len(snomed_list)
+
+    snomed_no_processed = snomed_list[:]
+    concepts_dict = {}
+    for index, concept in enumerate(snomed_list):
+        try:
+            print(f'Concept {index+1}/{total_concepts}: {concept}')
+            if concept != 'Ø':
+                concepts_dict[concept] = {}
+                for language in api_languages:
+                    concepts_dict[concept][language["language"]] = getConceptById(
+                        concept,
+                        language["language"],
+                        language["edition"],
+                        language["version"]
+                    )
+                print()
+            snomed_no_processed.pop(0)
+        except URLError as e:
+            print('Our IP was blocked from SNOMED')
+            print(e)
+            break
+        except Exception as e:
+            print('There is an error to get the translation')
+            print(e)
+
+    print(f'SNOMED IDs no processed: {snomed_no_processed}')
+    return concepts_dict
+
+def save_snomed_dataframe(concepts_dict):
+    if not os.path.exists(BASE_PATH):
+        os.makedirs(BASE_PATH)
+
+    df = pd.DataFrame.from_dict(concepts_dict, orient='index')
+    df = df.rename_axis('SNOMEDID').reset_index()
+    df.to_csv(f'{BASE_PATH}/concepts_translation.csv', index=False)
+
+def translate_snomedid(**kwargs):
+    config_dict = kwargs['dag_run'].conf if kwargs['dag_run'].conf != {} else default_args
+    spreadsheet_id = config_dict.get('spreadsheet_id')
+    sheet_id = config_dict.get('sheet_id')
+    column = config_dict.get('column')
+    languages = config_dict.get('api_languages', api_languages)
+
+    df = get_public_spreadsheet(spreadsheet_id, sheet_id)
+    snomed_list = get_snomedid_list(df, column)
+   
+    #Only for test
+    snomed_list = snomed_list[:5]
+
+    concepts_dict = bulk_translate(snomed_list, languages)
+    save_snomed_dataframe(concepts_dict)
