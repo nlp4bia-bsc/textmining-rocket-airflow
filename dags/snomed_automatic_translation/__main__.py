@@ -4,8 +4,7 @@ import json
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from scripts.snomed_automatic_translation.spreadsheet_translator import translate_snomedid
-
+from snomed_automatic_translation.scripts.spreadsheet_translator import translate_snomedid
 
 default_args = {
     "spreadsheet_id": "1GM17jnZop0eHSYaWKccVhp4pdbX58IEuSLXsiYg4GUQ",

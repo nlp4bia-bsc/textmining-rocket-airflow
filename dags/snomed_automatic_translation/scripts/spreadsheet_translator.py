@@ -1,8 +1,10 @@
 from urllib.error import URLError
+from datetime import datetime
 import pandas as pd
 import os
 
-from scripts.snomed_automatic_translation.snomed_api import getConceptById
+from snomed_automatic_translation.scripts.spreadsheet_manager import dataframe_to_spreadsheet
+from snomed_automatic_translation.scripts.snomed_api import getConceptById
 
 BASE_PATH = '/opt/airflow/storage/translations'
 
@@ -85,15 +87,32 @@ def bulk_translate(snomed_list, api_languages):
             print(e)
 
     print(f'SNOMED IDs no processed: {snomed_no_processed}')
-    return concepts_dict
+    return concepts_dict, snomed_no_processed
 
-def save_snomed_dataframe(concepts_dict):
-    if not os.path.exists(BASE_PATH):
-        os.makedirs(BASE_PATH)
+def save_snomed_dataframe(concepts_dict, no_processed):
+    df_processed = pd.DataFrame.from_dict(concepts_dict, orient='index')
+    df_processed = df_processed.rename_axis('SNOMED_ID').reset_index()
 
-    df = pd.DataFrame.from_dict(concepts_dict, orient='index')
-    df = df.rename_axis('SNOMEDID').reset_index()
-    df.to_csv(f'{BASE_PATH}/concepts_translation.csv', index=False)
+    df_no_processed = pd.DataFrame(no_processed, columns=['SNOMED_ID'])
+
+    now = datetime.now()
+    current_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
+    metadata = {
+        'spreadsheet_name': f'SNOMED_TRANSLATION_{current_time}',
+        'sheets': [
+            {
+                'sheet_name': 'SNOMED TRANSLATION',
+                'data': df_processed,
+            },
+            {
+                'sheet_name': 'SNOMED NO_PROCESSED',
+                'data': df_no_processed,
+            },
+        ]
+    }
+
+    dataframe_to_spreadsheet(metadata)
 
 def translate_snomedid(**kwargs):
     config_dict = kwargs['dag_run'].conf if kwargs['dag_run'].conf != {} else default_args
@@ -106,7 +125,7 @@ def translate_snomedid(**kwargs):
     snomed_list = get_snomedid_list(df, column)
    
     #Only for test
-    snomed_list = snomed_list[:5]
+    snomed_list = snomed_list[:10]
 
-    concepts_dict = bulk_translate(snomed_list, languages)
-    save_snomed_dataframe(concepts_dict)
+    concepts_dict, snomed_no_processed = bulk_translate(snomed_list, languages)
+    save_snomed_dataframe(concepts_dict, snomed_no_processed)

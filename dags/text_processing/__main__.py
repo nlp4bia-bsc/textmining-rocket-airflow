@@ -2,14 +2,14 @@ import airflow
 import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from scripts.text_processing.basic_processing import (
+from text_processing.scripts.basic_processing import (
     copy_files,
     force_unix_newlines,
     remove_html_errors,
     fix_encoding_errors,
 )
-from scripts.text_processing.quick_prepro import quick_preprosessing
-from scripts.text_processing.check_newlines import check_newlines
+from text_processing.scripts.quick_prepro import quick_preprosessing
+from text_processing.scripts.check_newlines import check_newlines
 
 
 dag = DAG(
