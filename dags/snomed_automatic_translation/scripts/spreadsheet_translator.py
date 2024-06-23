@@ -124,8 +124,8 @@ def translate_snomedid(**kwargs):
     df = get_public_spreadsheet(spreadsheet_id, sheet_id)
     snomed_list = get_snomedid_list(df, column)
    
-    #Only for test
-    snomed_list = snomed_list[:10]
+    # Only for test
+    # snomed_list = snomed_list[:10]
 
     concepts_dict, snomed_no_processed = bulk_translate(snomed_list, languages)
     save_snomed_dataframe(concepts_dict, snomed_no_processed)
