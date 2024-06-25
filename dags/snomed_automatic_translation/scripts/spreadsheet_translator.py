@@ -8,6 +8,8 @@ from snomed_automatic_translation.scripts.snomed_api import getConceptById
 
 BASE_PATH = '/opt/airflow/storage/translations'
 
+AVOID_ID = ['Ø', 'nan']
+
 api_languages = [
     {
         "language": "en",
@@ -67,7 +69,7 @@ def bulk_translate(snomed_list, api_languages):
     for index, concept in enumerate(snomed_list):
         try:
             print(f'Concept {index+1}/{total_concepts}: {concept}')
-            if concept != 'Ø':
+            if concept not in AVOID_ID:
                 concepts_dict[concept] = {}
                 for language in api_languages:
                     concepts_dict[concept][language["language"]] = getConceptById(
