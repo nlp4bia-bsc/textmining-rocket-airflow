@@ -20,6 +20,13 @@ def getConceptById(id, language, edition, version):
         return None
     
     result = data['items'][0]['pt']['term'] if data['items'][0]['pt']['lang'] == language else None
+    synomyns = [
+        {
+            'synonym': synonym['term'],
+            'descriptionId': synonym['descriptionId']
+        } for synonym in data['items'][0]['descriptions'] if synonym.get('type') == "SYNONYM" and synonym.get('lang') == language
+    ]
     print(f"ID: {id}, language: {language}, Concept: {result}, Complete result: {data['items'][0]['pt']}, URL: {url}")
+    print(f"ID: {id}, language: {language}, Synonyms: {synomyns}")
     
-    return result
+    return result, {'concept': result, 'synonyms': synomyns}

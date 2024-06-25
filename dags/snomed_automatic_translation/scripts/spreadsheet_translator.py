@@ -66,13 +66,15 @@ def bulk_translate(snomed_list, api_languages):
 
     snomed_no_processed = snomed_list[:]
     concepts_dict = {}
+    synonyms_dict = {}
     for index, concept in enumerate(snomed_list):
         try:
             print(f'Concept {index+1}/{total_concepts}: {concept}')
             if concept not in AVOID_ID:
                 concepts_dict[concept] = {}
+                synonyms_dict[concept] = {}
                 for language in api_languages:
-                    concepts_dict[concept][language["language"]] = getConceptById(
+                    concepts_dict[concept][language["language"]], synonyms_dict[concept][language["language"]] = getConceptById(
                         concept,
                         language["language"],
                         language["edition"],
@@ -89,9 +91,24 @@ def bulk_translate(snomed_list, api_languages):
             print(e)
 
     print(f'SNOMED IDs no processed: {snomed_no_processed}')
-    return concepts_dict, snomed_no_processed
+    return concepts_dict, synonyms_dict, snomed_no_processed
 
-def save_snomed_dataframe(concepts_dict, no_processed):
+def create_synonym_dataframe(data, language):
+    rows = []
+    for main_id, translations in data.items():
+        if language in translations:
+            concept = translations[language].get('concept', None)
+            for entry in translations[language].get('synonyms', []):
+                rows.append({
+                    'SNOMED_ID': main_id,
+                    'Definition': concept,
+                    'Description ID': entry['descriptionId'],
+                    'Synonym': entry['synonym']
+                })
+    return pd.DataFrame(rows)
+
+
+def save_snomed_dataframe(concepts_dict, synonyms_dict, no_processed):
     df_processed = pd.DataFrame.from_dict(concepts_dict, orient='index')
     df_processed = df_processed.rename_axis('SNOMED_ID').reset_index()
 
@@ -106,6 +123,22 @@ def save_snomed_dataframe(concepts_dict, no_processed):
             {
                 'sheet_name': 'SNOMED TRANSLATION',
                 'data': df_processed,
+            },
+            {
+                'sheet_name': 'EN_SYNONYMS',
+                'data': create_synonym_dataframe(synonyms_dict, 'en'),
+            },
+            {
+                'sheet_name': 'ES_SYNONYMS',
+                'data': create_synonym_dataframe(synonyms_dict, 'es'),
+            },
+            {
+                'sheet_name': 'NL_SYNONYMS',
+                'data': create_synonym_dataframe(synonyms_dict, 'nl'),
+            },
+            {
+                'sheet_name': 'SV_SYNONYMS',
+                'data': create_synonym_dataframe(synonyms_dict, 'sv'),
             },
             {
                 'sheet_name': 'SNOMED NO_PROCESSED',
@@ -126,5 +159,5 @@ def translate_snomedid(**kwargs):
     df = get_public_spreadsheet(spreadsheet_id, sheet_id)
     snomed_list = get_snomedid_list(df, column)
 
-    concepts_dict, snomed_no_processed = bulk_translate(snomed_list, languages)
-    save_snomed_dataframe(concepts_dict, snomed_no_processed)
+    concepts_dict, synonyms_dict, snomed_no_processed = bulk_translate(snomed_list, languages)
+    save_snomed_dataframe(concepts_dict, synonyms_dict, snomed_no_processed)
