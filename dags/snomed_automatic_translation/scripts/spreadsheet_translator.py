@@ -108,7 +108,7 @@ def create_synonym_dataframe(data, language):
     return pd.DataFrame(rows)
 
 
-def save_snomed_dataframe(concepts_dict, synonyms_dict, no_processed):
+def save_snomed_dataframe(concepts_dict, synonyms_dict, no_processed, languages):
     df_processed = pd.DataFrame.from_dict(concepts_dict, orient='index')
     df_processed = df_processed.rename_axis('SNOMED_ID').reset_index()
 
@@ -125,27 +125,17 @@ def save_snomed_dataframe(concepts_dict, synonyms_dict, no_processed):
                 'data': df_processed,
             },
             {
-                'sheet_name': 'EN_SYNONYMS',
-                'data': create_synonym_dataframe(synonyms_dict, 'en'),
-            },
-            {
-                'sheet_name': 'ES_SYNONYMS',
-                'data': create_synonym_dataframe(synonyms_dict, 'es'),
-            },
-            {
-                'sheet_name': 'NL_SYNONYMS',
-                'data': create_synonym_dataframe(synonyms_dict, 'nl'),
-            },
-            {
-                'sheet_name': 'SV_SYNONYMS',
-                'data': create_synonym_dataframe(synonyms_dict, 'sv'),
-            },
-            {
                 'sheet_name': 'SNOMED NO_PROCESSED',
                 'data': df_no_processed,
             },
         ]
     }
+
+    for language in languages:
+        metadata['sheets'].append({
+            'sheet_name': f'{language["language"].upper()}_SYNONYMS',
+            'data': create_synonym_dataframe(synonyms_dict, language["language"]),
+        })
 
     dataframe_to_spreadsheet(metadata)
 
@@ -160,4 +150,4 @@ def translate_snomedid(**kwargs):
     snomed_list = get_snomedid_list(df, column)
 
     concepts_dict, synonyms_dict, snomed_no_processed = bulk_translate(snomed_list, languages)
-    save_snomed_dataframe(concepts_dict, synonyms_dict, snomed_no_processed)
+    save_snomed_dataframe(concepts_dict, synonyms_dict, snomed_no_processed, languages)
