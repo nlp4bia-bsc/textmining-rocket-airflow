@@ -58,6 +58,8 @@ def get_snomedid_list(df, column):
         lines = [line.strip() for line in str(snomed_id).splitlines() if line.strip()]
         snomed_processed.extend(lines)
 
+    snomed_processed = list(set(snomed_processed))
+
     print(f'Spreadsheet SNOMED IDs: {snomed_processed}')
     return snomed_processed
 
