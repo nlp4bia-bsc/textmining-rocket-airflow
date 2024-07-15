@@ -13,7 +13,7 @@ from text_processing.scripts.check_newlines import check_newlines
 
 
 dag = DAG(
-    dag_id="text_processing",
+    dag_id="rocket-basic-text-processing",
     start_date=datetime.datetime(2024, 5, 10),
     schedule_interval=None,
 )
