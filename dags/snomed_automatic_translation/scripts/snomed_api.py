@@ -6,7 +6,7 @@ baseUrl = 'https://browser.ihtsdotools.org/snowstorm/snomed-ct'
 
 def urlopen_with_header(url, language):
     req = Request(url)
-    req.add_header('User-Agent', 'PostmanRuntime/7.29.0')
+    req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36')
     req.add_header('Accept-Language', language)
     return urlopen(req)
 

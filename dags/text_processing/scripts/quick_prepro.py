@@ -69,7 +69,11 @@ def quick_prepro(file, old2new_simple, old2new_regex, pattern, r):
     with codecs.open(os.path.join(r, file), 'w', 'utf-8') as f:
         f.write(unicodedata.normalize('NFKC', txt).encode("utf-8").decode("utf-8"))
 
-def quick_preprosessing(output_dir):
+def quick_preprosessing(output_dir, **kwargs):
+    config_dict = kwargs['dag_run'].conf if kwargs['dag_run'].conf != {} else None
+    source_dir = config_dict['source_dir']
+    dest_dir_temp = f"{output_dir}{source_dir.replace('/storage','')}"
+    os.makedirs(dest_dir_temp, exist_ok=True)
     
     # Define substitution dictionaries
     old2new_simple = {u'\uf0fc':'', # Remove 
@@ -83,7 +87,7 @@ def quick_preprosessing(output_dir):
     old2new_regex = {':(?=[A-Za-z])':': ', # add space after all :
                      '•(?=[A-Za-z])':'• '} # add space after all •
     
-    for r, d, f in os.walk(output_dir):
+    for r, d, f in os.walk(dest_dir_temp):
         for file in f:
             if file.split('.')[-1] != 'txt':
                 continue

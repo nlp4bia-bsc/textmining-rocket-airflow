@@ -22,9 +22,9 @@ dag = DAG(
 copy_files_step = PythonOperator(
     task_id = "copy_files_step",
     python_callable=copy_files,
+    provide_context=True,
     op_kwargs={
-        "source_dir": "/opt/airflow/storage/init",
-        "dest_dir": "/opt/airflow/storage/dest"
+        "dest_dir": "/storage/temp"
     },
     dag=dag
 )
@@ -33,8 +33,9 @@ copy_files_step = PythonOperator(
 force_unix_newlines_step = PythonOperator(
     task_id='force_unix_newlines_step',
     python_callable=force_unix_newlines,
+    provide_context=True,
     op_kwargs={
-        "output_dir": "/opt/airflow/storage/dest"
+        "output_dir": "/storage/temp"
     },
     dag=dag
 )
@@ -43,8 +44,9 @@ force_unix_newlines_step = PythonOperator(
 fix_encoding_errors_step = PythonOperator(
     task_id='fix_encoding_errors_step',
     python_callable=fix_encoding_errors,
+    provide_context=True,
     op_kwargs={
-        "output_dir": "/opt/airflow/storage/dest"
+        "output_dir": "/storage/temp"
     },
     dag=dag
 )
@@ -53,8 +55,9 @@ fix_encoding_errors_step = PythonOperator(
 remove_html_errors_step = PythonOperator(
     task_id='remove_html_errors_step',
     python_callable=remove_html_errors,
+    provide_context=True,
     op_kwargs={
-        "output_dir": "/opt/airflow/storage/dest"
+        "output_dir": "/storage/temp"
     },
     dag=dag
 )
@@ -63,8 +66,9 @@ remove_html_errors_step = PythonOperator(
 quick_preprosessing_step = PythonOperator(
     task_id='quick_preprosessing_step',
     python_callable=quick_preprosessing,
+    provide_context=True,
     op_kwargs={
-        "output_dir": "/opt/airflow/storage/dest"
+        "output_dir": "/storage/temp"
     },
     dag=dag
 )
@@ -73,8 +77,9 @@ quick_preprosessing_step = PythonOperator(
 check_newlines_step = PythonOperator(
     task_id='check_newlines_step',
     python_callable=check_newlines,
+    provide_context=True,
     op_kwargs={
-        "output_dir": "/opt/airflow/storage/dest"
+        "output_dir": "/storage/temp"
     },
     dag=dag
 )

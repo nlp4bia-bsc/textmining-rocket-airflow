@@ -26,9 +26,16 @@ def check_first_lines(root, file):
             print('Check file {}, line {}: {}...'.format(file, c-1, line[0:5]\
                                                          if len(line) > 5 else line))
     
-def check_newlines(output_dir):
-    for r, d, f in os.walk(output_dir):
+def check_newlines(output_dir, **kwargs):
+    config_dict = kwargs['dag_run'].conf if kwargs['dag_run'].conf != {} else None
+    source_dir = config_dict['source_dir']
+    dest_dir_temp = f"{output_dir}{source_dir.replace('/storage','')}"
+    os.makedirs(dest_dir_temp, exist_ok=True)
+
+    for r, d, f in os.walk(dest_dir_temp):
         for file in f:
             if file.split('.')[-1] != 'txt':
                 continue
             check_first_lines(r, file)
+
+    print(f"Download the new version in https://textmining2.bsc.es/api/pipelines/download?path={dest_dir_temp}")
