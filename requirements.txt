@@ -1,3 +1,11 @@
 gspread
 google-auth
 gspread_dataframe
+pandas
+numpy
+requests
+pyyaml
+matplotlib
+scikit-learn
+xmltodict
+PyMuPDF
