@@ -36,7 +36,7 @@ def get_magazine_list(country):
     scielo_country_path = env["scielo-path"][country]
     url = f"{scielo_country_path}/{scielo_api}?{magazine_list_path}"
 
-    response = requests.get(url)
+    response = requests.get(url, headers=env["headers"])
     magazines_metadata = xml_string_to_dict(response.text)
 
     magazines_sets_list = transform_array(magazines_metadata["OAI-PMH"]["ListSets"]["set"])
@@ -67,7 +67,7 @@ def get_records_list(country_magazines):
         print(f"Getting records from {magazine['setName']}")
         url = f"{scielo_country_path}/{scielo_api}?{records_list_path}&set={magazine['setSpec']}"
 
-        response = requests.get(url)
+        response = requests.get(url, headers=env["headers"])
         records_metadata = xml_string_to_dict(response.text)
         
         data = records_metadata["OAI-PMH"]
@@ -87,7 +87,7 @@ def extract_window_location(html_text):
 
 
 def download_scielo_article(url, save_path):
-    response = requests.get(url)
+    response = requests.get(url, headers=env["headers"])
 
     if response.status_code == 200:
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -115,25 +115,43 @@ def extract_text_from_pdf(file_path, save_path):
 
     return save_path
 
+def is_exists(identifier, country):
+    path = f"/storage/temp/scielo_{country}"
+    pdf_path = f"{path}/{identifier}.pdf"
+    txt_path = f"{path}/{identifier}.txt"
+
+    return os.path.exists(pdf_path) and os.path.exists(txt_path)
+
 
 def get_txt_path(record, country):
-    scielo_country_path = env["scielo-path"][country]
-    scielo_get_pdf_path = env["paths"]["get_pdf"]
-    record_identifier = record["identifier"].split(":")[2]
-    response = requests.get(url = f"{scielo_country_path}/{scielo_front}?{scielo_get_pdf_path}{record_identifier}")
-    pdf_url = extract_window_location(response.text)
+    try:
+        scielo_country_path = env["scielo-path"][country]
+        scielo_get_pdf_path = env["paths"]["get_pdf"]
+        record_identifier = record["identifier"].split(":")[2]
+        main_path = f"/storage/temp/scielo_{country}/{record_identifier}"
 
-    if not pdf_url or "None" in pdf_url:
-        print(f"Error in url to download: {record_identifier}")
+        if is_exists(record_identifier, country):
+            record['pdf_path'] = f"{main_path}.pdf"
+            record['txt_path'] = f"{main_path}.txt"
+            return record
+
+        response = requests.get(url = f"{scielo_country_path}/{scielo_front}?{scielo_get_pdf_path}{record_identifier}", headers=env["headers"])
+        pdf_url = extract_window_location(response.text)
+
+        if not pdf_url or "None" in pdf_url:
+            print(f"Error in url to download: {record_identifier}")
+            return None
+        
+        
+        pdf_path = download_scielo_article(pdf_url, f"{main_path}.pdf")
+        txt_path = extract_text_from_pdf(pdf_path, f"{main_path}.txt")
+
+        record['pdf_path'] = pdf_path
+        record['txt_path'] = txt_path
+        return record
+    except:
+        print(f"Error in: {record}")
         return None
-    
-    main_path = f"/storage/temp/scielo_{country}/{record_identifier}"
-    pdf_path = download_scielo_article(pdf_url, f"{main_path}.pdf")
-    txt_path = extract_text_from_pdf(pdf_path, f"{main_path}.txt")
-
-    record['pdf_path'] = pdf_path
-    record['txt_path'] = txt_path
-    return record
 
 
 def get_txt_path_bulk(record_list, country):
