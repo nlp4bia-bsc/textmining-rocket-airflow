@@ -1,0 +1,3 @@
+[submodule "dags/textmining_scielo_scrapping"]
+	path = dags/textmining_scielo_scrapping
+	url = https://github.com/nlp4bia-bsc/textmining_scielo_scrapping.git
