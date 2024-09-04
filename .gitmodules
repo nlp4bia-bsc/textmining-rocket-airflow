@@ -1,3 +1,6 @@
 [submodule "dags/textmining_scielo_scrapping"]
 	path = dags/textmining_scielo_scrapping
 	url = https://github.com/nlp4bia-bsc/textmining_scielo_scrapping.git
+[submodule "dags/textmining_preprocessing_ner"]
+	path = dags/textmining_preprocessing_ner
+	url = https://github.com/nlp4bia-bsc/textmining_preprocessing_ner.git
